@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Colors */
+    --primary-bg: 255 255 255;
+    --secondary-bg: 245 245 247;
+    --primary-text: 29 29 31;
+    --secondary-text: 134 134 139;
+    --border-color: 210 210 215;
+    --shadow-color: 0 0 0;
+    --accent-1: 255 122 0;
+    --accent-2: 255 77 77;
+    --accent-3: 147 51 234;
+  }
+}
+
+@layer utilities {
+  .gradient-border {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #FF7A00, #FF4D4D, #9333EA);
+    mask: 
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Audio player animations */
+  @keyframes progress-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes progress-glow {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+
+  .animate-progress-pulse {
+    animation: progress-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-progress-glow {
+    animation: progress-glow 1s ease-in-out infinite;
+  }
+}
