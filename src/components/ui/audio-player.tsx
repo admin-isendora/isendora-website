@@ -125,52 +125,87 @@ export function AudioPlayer({
     }
   };
 
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const updateProgress = (clientX: number) => {
     if (!progressRef.current || !duration) return;
     
     const rect = progressRef.current.getBoundingClientRect();
-    const clickPosition = e.clientX - rect.left;
+    const position = clientX - rect.left;
     const progressWidth = rect.width;
-    const clickPercentage = clickPosition / progressWidth;
-    const newTime = clickPercentage * duration;
+    const percentage = Math.max(0, Math.min(1, position / progressWidth));
+    const newTime = percentage * duration;
     
     const audio = getAudioElement();
     audio.currentTime = newTime;
     setCurrentTime(newTime);
   };
 
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    updateProgress(e.clientX);
+  };
+
+  // Mouse events
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
     setIsDragging(true);
-    handleProgressClick(e);
+    updateProgress(e.clientX);
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging || !progressRef.current || !duration) return;
-    
-    const rect = progressRef.current.getBoundingClientRect();
-    const clickPosition = e.clientX - rect.left;
-    const progressWidth = rect.width;
-    const clickPercentage = Math.max(0, Math.min(1, clickPosition / progressWidth));
-    const newTime = clickPercentage * duration;
-    
-    const audio = getAudioElement();
-    audio.currentTime = newTime;
-    setCurrentTime(newTime);
+    if (!isDragging) return;
+    e.stopPropagation();
+    e.preventDefault();
+    updateProgress(e.clientX);
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: MouseEvent) => {
+    if (!isDragging) return;
+    e.stopPropagation();
+    e.preventDefault();
     setIsDragging(false);
   };
 
-  // Add global mouse events for dragging
+  // Touch events for mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsDragging(true);
+    const touch = e.touches[0];
+    updateProgress(touch.clientX);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!isDragging) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const touch = e.touches[0];
+    updateProgress(touch.clientX);
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!isDragging) return;
+    e.stopPropagation();
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  // Add global mouse and touch events for dragging
   useEffect(() => {
     if (isDragging) {
+      // Mouse events
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      
+      // Touch events
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd, { passive: false });
       
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
       };
     }
   }, [isDragging, duration]);
@@ -207,13 +242,23 @@ export function AudioPlayer({
       
       <div 
         ref={progressRef}
-        className={`${isDarkMode ? 'bg-[#252525]' : 'bg-gray-100'} rounded-full h-2 flex-grow overflow-hidden cursor-pointer relative`}
+        className={`${isDarkMode ? 'bg-[#252525]' : 'bg-gray-100'} rounded-full h-2 flex-grow overflow-hidden cursor-pointer relative touch-none`}
         onClick={handleProgressClick}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        style={{ touchAction: 'none' }}
       >
         <div 
           className="bg-gray-600 h-full transition-all duration-100"
           style={{ width: `${progress}%` }}
+        />
+        {/* Visual indicator for better mobile UX */}
+        <div 
+          className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-gray-600 rounded-full shadow-md opacity-0 transition-opacity duration-200"
+          style={{ 
+            left: `calc(${progress}% - 8px)`,
+            opacity: isDragging ? 1 : 0
+          }}
         />
       </div>
       

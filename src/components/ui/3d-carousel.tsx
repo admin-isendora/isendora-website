@@ -130,6 +130,12 @@ export function Carousel3D({
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Check if touch started on audio player or its children
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-audio-player]') || target.style.touchAction === 'none') {
+      return;
+    }
+
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     isDraggingRef.current = true;
@@ -141,6 +147,13 @@ export function Carousel3D({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDraggingRef.current) return;
+
+    // Check if we're interacting with audio player
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-audio-player]') || target.style.touchAction === 'none') {
+      isDraggingRef.current = false;
+      return;
+    }
 
     const currentX = e.touches[0].clientX;
     const currentY = e.touches[0].clientY;

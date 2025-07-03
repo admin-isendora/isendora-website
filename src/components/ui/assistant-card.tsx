@@ -112,15 +112,17 @@ export function AssistantCard({ assistant, isDarkMode, onPlay, onPause }: Assist
         )}
       </motion.div>
       
-      <AudioPlayer 
-        audioSrc={assistant.audio}
-        isDarkMode={isDarkMode}
-        onPlay={handlePlay}
-        onPause={handlePause}
-        onEnd={handleEnd}
-        onRegister={registerPlayer}
-        cardId={assistant.id}
-      />
+      <div data-audio-player>
+        <AudioPlayer 
+          audioSrc={assistant.audio}
+          isDarkMode={isDarkMode}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          onEnd={handleEnd}
+          onRegister={registerPlayer}
+          cardId={assistant.id}
+        />
+      </div>
     </div>
   );
 }
