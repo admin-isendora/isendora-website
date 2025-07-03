@@ -145,10 +145,30 @@ export function AudioPlayer({
     // Store audio reference
     audioRef.current = audio;
 
-    // Load audio source
-    console.log('Setting audio src to:', audioSrc);
-    audio.src = audioSrc;
-    audio.load();
+    // Load audio source using fetch to handle CORS
+      console.log('Fetching audio from:', audioSrc);
+      fetch(audioSrc, {
+        mode: 'cors',
+        credentials: 'omit'
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.blob();
+        })
+        .then(blob => {
+          const blobUrl = URL.createObjectURL(blob);
+          console.log('Created blob URL for audio');
+          audio.src = blobUrl;
+          audio.load();
+        })
+        .catch(error => {
+          console.error('Error fetching audio:', error);
+          setError('Error loading audio file. Please check your connection.');
+          setIsLoading(false);
+          setIsReadyToPlay(false);
+        });
 
     return () => {
       console.log('Cleaning up audio');
