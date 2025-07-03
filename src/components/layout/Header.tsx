@@ -203,18 +203,7 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
             className="flex items-center gap-4"
             variants={staggerContainer}
           >
-            <motion.div variants={fadeIn}>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button 
-                  variant="default" 
-                  rounded="full" 
-                  className="hidden md:flex text-sm"
-                  onClick={() => window.open('https://dashboard.isendora.com/', '_blank')}
-                >
-                  Sign In
-                </Button>
-              </motion.div>
-            </motion.div>
+            {/* Sign In button is now hidden */}
             
             <motion.button 
               className="md:hidden touch-manipulation relative w-6 h-6 flex items-center justify-center"
@@ -290,14 +279,7 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
                     {link.label}
                   </motion.button>
                 ))}
-                <Button 
-                  variant="default" 
-                  rounded="full" 
-                  className="w-full mt-2"
-                  onClick={() => window.open('https://dashboard.isendora.com/', '_blank')}
-                >
-                  Sign In
-                </Button>
+                {/* Sign In button is also hidden in mobile menu */}
               </div>
             </motion.div>
           </FocusTrap>
