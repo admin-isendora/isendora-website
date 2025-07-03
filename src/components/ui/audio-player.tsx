@@ -42,10 +42,6 @@ export function AudioPlayer({
     
     const audio = new Audio();
     
-    // Important: Set crossOrigin before setting src
-    audio.crossOrigin = "anonymous";
-    audio.preload = "metadata";
-    
     // Set up event listeners
     const handleLoadStart = () => {
       console.log('Audio load started');
@@ -126,12 +122,6 @@ export function AudioPlayer({
       setIsReadyToPlay(true);
     };
 
-    const handleProgress = () => {
-      if (audio.buffered.length > 0) {
-        console.log('Audio buffering progress');
-      }
-    };
-
     // Add event listeners
     audio.addEventListener('loadstart', handleLoadStart);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
@@ -140,35 +130,22 @@ export function AudioPlayer({
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
-    audio.addEventListener('progress', handleProgress);
 
     // Store audio reference
     audioRef.current = audio;
 
-    // Load audio source using fetch to handle CORS
-      console.log('Fetching audio from:', audioSrc);
-      fetch(audioSrc, {
-        mode: 'cors',
-        credentials: 'omit'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.blob();
-        })
-        .then(blob => {
-          const blobUrl = URL.createObjectURL(blob);
-          console.log('Created blob URL for audio');
-          audio.src = blobUrl;
-          audio.load();
-        })
-        .catch(error => {
-          console.error('Error fetching audio:', error);
-          setError('Error loading audio file. Please check your connection.');
-          setIsLoading(false);
-          setIsReadyToPlay(false);
-        });
+    // Load audio directly without CORS issues
+    try {
+      console.log('Setting audio src directly:', audioSrc);
+      // Don't set crossOrigin to avoid CORS issues
+      audio.src = audioSrc;
+      audio.load();
+    } catch (error) {
+      console.error('Error setting audio src:', error);
+      setError('Error loading audio file');
+      setIsLoading(false);
+      setIsReadyToPlay(false);
+    }
 
     return () => {
       console.log('Cleaning up audio');
@@ -183,7 +160,6 @@ export function AudioPlayer({
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
-      audio.removeEventListener('progress', handleProgress);
       
       cleanupAudio(audio);
     };
