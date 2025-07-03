@@ -31,28 +31,10 @@ export function AudioPlayer({
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [isReadyToPlay, setIsReadyToPlay] = useState(false);
-  const [userHasInteracted, setUserHasInteracted] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<number | null>(null);
-
-  // Track user interaction
-  useEffect(() => {
-    const handleUserInteraction = () => {
-      setUserHasInteracted(true);
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
-    };
-
-    document.addEventListener('click', handleUserInteraction);
-    document.addEventListener('touchstart', handleUserInteraction);
-
-    return () => {
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
-    };
-  }, []);
 
   // Initialize audio element
   useEffect(() => {
@@ -60,49 +42,25 @@ export function AudioPlayer({
     
     const audio = new Audio();
     
+    // CORS settings
+    audio.crossOrigin = "anonymous";
+    
     // Set up event listeners
-    const handleLoadStart = () => {
-      console.log('Audio load started');
-      setIsLoading(true);
-      setError(null);
-    };
-
     const handleLoadedMetadata = () => {
       console.log('Audio metadata loaded, duration:', audio.duration);
-      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
-        setDuration(audio.duration);
-        setIsLoading(false);
-        setIsReadyToPlay(true);
-      }
-    };
-
-    const handleCanPlay = () => {
-      console.log('Audio can play');
+      setDuration(audio.duration);
       setIsLoading(false);
       setIsReadyToPlay(true);
-      setError(null);
     };
 
     const handleTimeUpdate = () => {
-      if (audio.currentTime !== undefined && audio.duration !== undefined) {
-        const current = audio.currentTime;
-        const total = audio.duration;
-        
-        setCurrentTime(current);
-        if (total > 0 && !isNaN(total) && isFinite(total)) {
-          setProgress((current / total) * 100);
-        }
+      const current = audio.currentTime;
+      const total = audio.duration;
+      
+      setCurrentTime(current);
+      if (total > 0) {
+        setProgress((current / total) * 100);
       }
-    };
-
-    const handlePlay = () => {
-      console.log('Audio play event fired');
-      setIsPlaying(true);
-    };
-
-    const handlePause = () => {
-      console.log('Audio pause event fired');
-      setIsPlaying(false);
     };
 
     const handleEnded = () => {
@@ -119,80 +77,56 @@ export function AudioPlayer({
 
     const handleError = (e: Event) => {
       console.error('Audio error:', e);
-      const audioError = (e.target as HTMLAudioElement)?.error;
-      let errorMessage = 'Error loading audio';
-      
-      if (audioError) {
-        switch (audioError.code) {
-          case MediaError.MEDIA_ERR_ABORTED:
-            errorMessage = 'Audio loading was aborted';
-            break;
-          case MediaError.MEDIA_ERR_NETWORK:
-            errorMessage = 'Network error while loading audio';
-            break;
-          case MediaError.MEDIA_ERR_DECODE:
-            errorMessage = 'Audio decoding error';
-            break;
-          case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-            errorMessage = 'Audio format not supported';
-            break;
-        }
-      }
-      
-      setError(errorMessage);
+      setError('Error loading audio');
       setIsLoading(false);
       setIsReadyToPlay(false);
+    };
+
+    const handleCanPlayThrough = () => {
+      console.log('Audio can play through');
+      setIsReadyToPlay(true);
+      setError(null);
+    };
+
+    const handleLoadStart = () => {
+      console.log('Audio load started');
+      setIsLoading(true);
     };
 
     const handleLoadedData = () => {
       console.log('Audio data loaded');
       setIsLoading(false);
-      setIsReadyToPlay(true);
     };
 
     // Add event listeners
     audio.addEventListener('loadstart', handleLoadStart);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('loadeddata', handleLoadedData);
-    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('play', handlePlay);
-    audio.addEventListener('pause', handlePause);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
+    audio.addEventListener('canplaythrough', handleCanPlayThrough);
 
     // Store audio reference
     audioRef.current = audio;
 
-    // Load audio directly without CORS issues
-    try {
-      console.log('Setting audio src directly:', audioSrc);
-      // Set preload to metadata to prepare the audio
-      audio.preload = 'metadata';
-      audio.src = audioSrc;
-      audio.load();
-    } catch (error) {
-      console.error('Error setting audio src:', error);
-      setError('Error loading audio file');
-      setIsLoading(false);
-      setIsReadyToPlay(false);
-    }
+    // Load audio source directly
+    console.log('Loading audio from:', audioSrc);
+    audio.src = audioSrc;
+    audio.load();
 
     return () => {
-      console.log('Cleaning up audio');
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
       
       audio.removeEventListener('loadstart', handleLoadStart);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('loadeddata', handleLoadedData);
-      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('play', handlePlay);
-      audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
+      audio.removeEventListener('canplaythrough', handleCanPlayThrough);
       
       cleanupAudio(audio);
     };
@@ -226,8 +160,8 @@ export function AudioPlayer({
           const current = audio.currentTime;
           const total = audio.duration;
           
-          if (!isNaN(current) && !isNaN(total) && total > 0) {
-            setCurrentTime(current);
+          setCurrentTime(current);
+          if (total > 0) {
             setProgress((current / total) * 100);
           }
         }
@@ -249,65 +183,41 @@ export function AudioPlayer({
       return;
     }
 
-    // Mark that user has interacted
-    setUserHasInteracted(true);
-
     try {
       if (isPlaying) {
         console.log('Pausing audio');
         audio.pause();
-        // Don't set isPlaying here, let the event handler do it
+        setIsPlaying(false);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
         if (onPause) onPause();
       } else {
-        console.log('Attempting to play audio');
-        
-        // Reset if ended
+        console.log('Playing audio');
         if (audio.ended) {
           audio.currentTime = 0;
-          setCurrentTime(0);
-          setProgress(0);
         }
 
-        // Ensure volume is set
-        if (!isMuted) {
-          audio.volume = 1;
-        }
-        
-        // Try to play
-        try {
-          const playPromise = audio.play();
-          if (playPromise !== undefined) {
-            await playPromise;
-            console.log('Audio play promise resolved successfully');
+        // Simple play call
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            setIsPlaying(true);
             if (onPlay) onPlay();
-          }
-        } catch (playError) {
-          console.error('Play promise rejected:', playError);
-          throw playError;
+            console.log('Audio started playing successfully');
+          }).catch((error) => {
+            console.error('Play failed:', error);
+            setError('Cannot play audio. Try clicking anywhere on the page first.');
+          });
+        } else {
+          setIsPlaying(true);
+          if (onPlay) onPlay();
         }
       }
     } catch (error) {
       console.error('Error toggling playback:', error);
-      
-      // Handle specific play errors
-      if (error instanceof DOMException) {
-        switch (error.name) {
-          case 'NotAllowedError':
-            setError('Click anywhere on the page first, then try playing');
-            break;
-          case 'NotSupportedError':
-            setError('Audio format not supported');
-            break;
-          case 'AbortError':
-            setError('Audio playback was interrupted');
-            break;
-          default:
-            setError(`Playback error: ${error.message}`);
-        }
-      } else {
-        setError('Error playing audio. Please try again.');
-      }
-      
+      setError('Error playing audio. Please try again.');
       setIsPlaying(false);
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -318,21 +228,17 @@ export function AudioPlayer({
 
   const toggleMute = () => {
     if (!audioRef.current) return;
-    const newMutedState = !isMuted;
-    audioRef.current.muted = newMutedState;
-    if (!newMutedState) {
-      audioRef.current.volume = 1;
-    }
-    setIsMuted(newMutedState);
+    audioRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
   };
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !progressRef.current || !duration || !isReadyToPlay) return;
+    if (!audioRef.current || !progressRef.current || !duration) return;
     
     const rect = progressRef.current.getBoundingClientRect();
     const clickPosition = e.clientX - rect.left;
     const progressWidth = rect.width;
-    const clickPercentage = Math.max(0, Math.min(1, clickPosition / progressWidth));
+    const clickPercentage = clickPosition / progressWidth;
     const newTime = clickPercentage * duration;
     
     audioRef.current.currentTime = newTime;
@@ -356,10 +262,9 @@ export function AudioPlayer({
           !isReadyToPlay ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         disabled={isLoading || !isReadyToPlay}
-        title={!userHasInteracted ? 'Click to enable audio playback' : ''}
       >
         {isLoading ? (
-          <div className="w-4 h-4 rounded-full border-2 border-gray-600 border-t-transparent animate-spin"></div>
+          <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
         ) : isPlaying ? (
           <Pause className="w-4 h-4 text-gray-600" />
         ) : (
@@ -391,9 +296,9 @@ export function AudioPlayer({
         className={`bg-transparent border border-gray-600 rounded-full w-6 h-6 flex items-center justify-center hidden sm:flex transition-transform hover:scale-110 active:scale-90`}
       >
         {isMuted ? (
-          <VolumeX className="w-3 h-3 text-gray-600" />
+          <VolumeX className="w-3 h-3" />
         ) : (
-          <Volume2 className="w-3 h-3 text-gray-600" />
+          <Volume2 className="w-3 h-3" />
         )}
       </button>
     </div>
