@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause } from 'lucide-react';
 
 interface AudioPlayerProps {
@@ -26,9 +26,10 @@ export function AudioPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [userInteracted, setUserInteracted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   // Create audio element only when needed
   const getAudioElement = () => {
@@ -46,7 +47,9 @@ export function AudioPlayer({
       });
 
       audio.addEventListener('timeupdate', () => {
-        setCurrentTime(audio.currentTime);
+        if (!isDragging) {
+          setCurrentTime(audio.currentTime);
+        }
       });
 
       audio.addEventListener('ended', () => {
@@ -68,7 +71,7 @@ export function AudioPlayer({
   };
 
   // Register pause method
-  React.useEffect(() => {
+  useEffect(() => {
     if (onRegister) {
       onRegister({
         pause: () => {
@@ -83,8 +86,7 @@ export function AudioPlayer({
     }
   }, [onRegister, isPlaying, onPause]);
 
-  const handleClick = async () => {
-    setUserInteracted(true);
+  const handlePlayPause = async () => {
     const audio = getAudioElement();
     
     try {
@@ -123,6 +125,56 @@ export function AudioPlayer({
     }
   };
 
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!progressRef.current || !duration) return;
+    
+    const rect = progressRef.current.getBoundingClientRect();
+    const clickPosition = e.clientX - rect.left;
+    const progressWidth = rect.width;
+    const clickPercentage = clickPosition / progressWidth;
+    const newTime = clickPercentage * duration;
+    
+    const audio = getAudioElement();
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    handleProgressClick(e);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !progressRef.current || !duration) return;
+    
+    const rect = progressRef.current.getBoundingClientRect();
+    const clickPosition = e.clientX - rect.left;
+    const progressWidth = rect.width;
+    const clickPercentage = Math.max(0, Math.min(1, clickPosition / progressWidth));
+    const newTime = clickPercentage * duration;
+    
+    const audio = getAudioElement();
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Add global mouse events for dragging
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, duration]);
+
   const formatTime = (seconds: number): string => {
     if (isNaN(seconds) || seconds === 0) return '0:00';
     const m = Math.floor(seconds / 60);
@@ -132,11 +184,19 @@ export function AudioPlayer({
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  if (error) {
+    return (
+      <div className={`flex items-center gap-2 ${className}`}>
+        <div className="text-red-500 text-xs">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <button
-        onClick={handleClick}
-        className={`bg-transparent border border-gray-600 rounded-full w-8 h-8 flex items-center justify-center transition-transform hover:scale-110 active:scale-90`}
+        onClick={handlePlayPause}
+        className="bg-transparent border border-gray-600 rounded-full w-8 h-8 flex items-center justify-center transition-transform hover:scale-110 active:scale-90"
       >
         {isPlaying ? (
           <Pause className="w-4 h-4 text-gray-600" />
@@ -146,7 +206,10 @@ export function AudioPlayer({
       </button>
       
       <div 
+        ref={progressRef}
         className={`${isDarkMode ? 'bg-[#252525]' : 'bg-gray-100'} rounded-full h-2 flex-grow overflow-hidden cursor-pointer relative`}
+        onClick={handleProgressClick}
+        onMouseDown={handleMouseDown}
       >
         <div 
           className="bg-gray-600 h-full transition-all duration-100"
@@ -157,18 +220,6 @@ export function AudioPlayer({
       <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} min-w-[40px] text-right`}>
         {formatTime(currentTime)}
       </span>
-
-      {error && (
-        <div className="text-red-500 text-xs ml-2">
-          {error}
-        </div>
-      )}
-
-      {!userInteracted && (
-        <div className="text-xs text-gray-500 ml-2">
-          Click to play
-        </div>
-      )}
     </div>
   );
 }
