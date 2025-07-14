@@ -14,6 +14,8 @@ interface HomeProps {
   handleScroll: (id: string) => void;
 }
 
+<script defer data-relevanceai-share-id="d7b62b/2c73ad07-fa19-4bad-9c1d-00396f5a1329/0be6b2d8-e458-4a29-8435-8b75ec6e1683" src="https://app.relevanceai.com/embed/chat-bubble.js" data-share-styles="starting_message_prompts=Whats+up%21&hide_tool_steps=false&hide_file_uploads=false&hide_conversation_list=false&bubble_style=icon&primary_color=%23685FFF&bubble_icon=pd%2Fchat&input_placeholder_text=Type+your+message...&hide_logo=false&hide_description=false" ></script>
+
 function Home({ isDarkMode, handleScroll }: HomeProps) {
   return (
     <motion.div
