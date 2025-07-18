@@ -214,7 +214,15 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
             className="flex items-center gap-4"
             variants={staggerContainer}
           >
-            {/* Sign In button is now hidden */}
+            <motion.button
+              className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-4 py-1.5 text-sm font-medium hidden md:block"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              variants={fadeIn}
+            >
+              Let's Partner up
+            </motion.button>
             
             <motion.button 
               className="md:hidden touch-manipulation relative w-6 h-6 flex items-center justify-center"

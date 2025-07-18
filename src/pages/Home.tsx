@@ -82,7 +82,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
       {/* Hero Section */}
       <motion.section 
         className="container mx-auto px-4 flex flex-col justify-center items-center"
-        style={{ minHeight: "100vh" }}
+        style={{ minHeight: "calc(100vh - 100px)", paddingTop: "50px" }}
         initial="hidden"
         animate="visible"
         variants={staggerContainer}
@@ -94,7 +94,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
           >
             <div className="text-[#1a1a1a] mb-2">We are AI</div>
             
-            <div className="relative h-[1.2em] flex items-center justify-center mb-2">
+            <div className="relative h-[1.2em] flex items-center justify-center mb-2 text-6xl md:text-8xl lg:text-9xl">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentWordIndex}
@@ -128,17 +128,18 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
       >
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-4xl"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4">
+            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left">
               We don't sell AI
             </h2>
-            <h2 className="text-4xl md:text-6xl font-bold">
+            <h2 className="text-4xl md:text-6xl font-bold text-left">
               <span 
                 style={{
                   background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
@@ -171,7 +172,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
               viewport={{ once: true }}
               variants={numberVariants}
             >
-              <div className="text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-4">300+</div>
+              <CountUpNumber target={300} suffix="+" className="text-6xl md:text-7xl font-bold text-[#1a1a1a] mb-4" />
               <p className="text-lg text-gray-600">business solutions found</p>
             </motion.div>
             
@@ -183,7 +184,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
               variants={numberVariants}
               transition={{ delay: 0.1 }}
             >
-              <div className="text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-4">30%</div>
+              <CountUpNumber target={30} suffix="%" className="text-6xl md:text-7xl font-bold text-[#1a1a1a] mb-4" />
               <p className="text-lg text-gray-600">revenue growth after implementation</p>
             </motion.div>
             
@@ -195,7 +196,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
               variants={numberVariants}
               transition={{ delay: 0.2 }}
             >
-              <div className="text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-4">15+</div>
+              <CountUpNumber target={15} suffix="+" className="text-6xl md:text-7xl font-bold text-[#1a1a1a] mb-4" />
               <p className="text-lg text-gray-600">unique solutions developed</p>
             </motion.div>
           </div>
@@ -218,18 +219,13 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-3xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">
-              Get your free consultation
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              See how automation can transform your business
-            </p>
             <motion.button
-              className="bg-transparent text-black border-[2px] border-[#1D1D1F] rounded-full px-8 py-4 text-lg font-medium hover:bg-[#1D1D1F] hover:text-white transition-all duration-300"
+              className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-6 py-2 text-sm font-medium"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
             >
-              Let's Partner up
+              Get your free consultation
             </motion.button>
           </motion.div>
         </div>
@@ -238,4 +234,45 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
   );
 }
 
+// Component for counting up numbers
+function CountUpNumber({ target, suffix = '', className }: { target: number; suffix?: string; className?: string }) {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  
+  useEffect(() => {
+    if (!hasStarted) return;
+    
+    const duration = 2000; // 2 seconds
+    const steps = 60; // 60 steps for smooth animation
+    const increment = target / steps;
+    const stepDuration = duration / steps;
+    
+    let currentStep = 0;
+    const timer = setInterval(() => {
+      currentStep++;
+      const newCount = Math.min(Math.floor(increment * currentStep), target);
+      setCount(newCount);
+      
+      if (currentStep >= steps) {
+        clearInterval(timer);
+        setCount(target);
+      }
+    }, stepDuration);
+    
+    return () => clearInterval(timer);
+  }, [target, hasStarted]);
+  
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      onViewportEnter={() => setHasStarted(true)}
+    >
+      {count}{suffix}
+    </motion.div>
+  );
+}
 export default Home;
