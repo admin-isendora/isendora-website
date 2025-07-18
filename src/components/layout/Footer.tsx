@@ -33,7 +33,7 @@ export function Footer({ isDarkMode }: FooterProps) {
           >
             <a href="#" onClick={handleLogoClick} className="block mb-2">
               <img 
-                src="https://psymmxfknulxspcbvqmr.supabase.co/storage/v1/object/sign/logos/logo_website.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNTI1NmExNi01MjY0LTQ3ZTgtODZiMi02MGIxNDk1MDQ4MTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9sb2dvX3dlYnNpdGUucG5nIiwiaWF0IjoxNzUxNTQxNjQxLCJleHAiOjIwNjY5MDE2NDF9.KHbxut1mSTpj0rEXczK5M_y1DOE38I7AwWwwQr-vj0Y"
+                src="https://psymmxfknulxspcbvqmr.supabase.co/storage/v1/object/public/logos/logo_website.png"
                 alt="iSendora Logo"
                 className="w-28 h-28 -mt-8 -mb-8"
               />

@@ -13,8 +13,8 @@ interface HeaderProps {
   toggleDarkMode: () => void;
 }
 
-// Supabase logo URL - проверяем подключение
-const LOGO_URL = "https://psymmxfknulxspcbvqmr.supabase.co/storage/v1/object/sign/logos/logo_website.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNTI1NmExNi01MjY0LTQ3ZTgtODZiMi02MGIxNDk1MDQ4MTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9sb2dvX3dlYnNpdGUucG5nIiwiaWF0IjoxNzUxNTQxNjQxLCJleHAiOjIwNjY5MDE2NDF9.KHbxut1mSTpj0rEXczK5M_y1DOE38I7AwWwwQr-vj0Y";
+// Supabase public logo URL
+const LOGO_URL = "https://psymmxfknulxspcbvqmr.supabase.co/storage/v1/object/public/logos/logo_website.png";
 
 export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, toggleDarkMode }: HeaderProps) {
   const menuRef = useRef<HTMLDivElement>(null);
