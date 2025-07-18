@@ -185,11 +185,11 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
             className="max-w-6xl mx-auto"
           >
             <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
-              <span className="ml-8">We don't sell AI</span>
+              <span className="ml-4">We don't sell AI</span>
             </h2>
             <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
               <span
-                className="pb-2 mr-8"
+                className="pb-2 mr-4"
                 style={{
                   background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
                   WebkitBackgroundClip: 'text',
