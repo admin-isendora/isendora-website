@@ -46,8 +46,8 @@ function VoiceAI({ isDarkMode, handleScroll }: VoiceAIProps) {
       {/* FAQ Section */}
       <FAQ isDarkMode={isDarkMode} />
 
-      {/* AI Demo Call Section - Hidden for now */}
-      <div className="relative" style={{ display: 'none' }}>
+      {/* AI Demo Call Section */}
+      <div className="relative">
         {/* невидимый якорь */}
         <span id="demo-call" className="block absolute -top-[72px] h-0"></span>
       
