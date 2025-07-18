@@ -145,9 +145,7 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
   };
 
   const navLinks = [
-    { label: 'How We Build It', id: 'process-steps' },
-    { label: 'Pricing', id: 'pricing' },
-    { label: 'Demo Call', id: 'demo-call' }
+    { label: 'Voice AI', href: '/voice-ai' }
   ];
 
   return (
@@ -170,7 +168,7 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
                 ref={logoRef}
                 src={LOGO_URL}
                 alt="iSendora Logo"
-                className="w-28 h-28 -mt-8 -mb-8 transform-gpu"
+                className="w-24 h-24 -mt-6 -mb-6 transform-gpu"
                 loading="eager"
                 decoding="async"
                 style={{ 
@@ -187,8 +185,8 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
           >
             {navLinks.map((link) => (
               <motion.button
-                key={link.id}
-                onClick={() => handleScroll(link.id)}
+                key={link.href}
+                onClick={() => window.location.href = link.href}
                 className="text-[#1a1a1a] font-semibold text-sm hover:text-gray-900 transition-colors"
                 variants={fadeIn}
                 whileHover={{ scale: 1.02 }}
@@ -268,9 +266,9 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
               <div className="px-4 py-2 space-y-1">
                 {navLinks.map((link) => (
                   <motion.button
-                    key={link.id}
+                    key={link.href}
                     onClick={() => {
-                      handleScroll(link.id);
+                      window.location.href = link.href;
                       setIsMenuOpen(false);
                     }}
                     className="w-full text-left text-[#1a1a1a] font-semibold text-sm hover:text-gray-900 transition-colors py-3"
@@ -279,7 +277,6 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
                     {link.label}
                   </motion.button>
                 ))}
-                {/* Sign In button is also hidden in mobile menu */}
               </div>
             </motion.div>
           </FocusTrap>

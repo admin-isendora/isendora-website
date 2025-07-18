@@ -1,13 +1,5 @@
-import * as React from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import HeroSection from '@/components/home/HeroSection';
-import BusinessBenefits from '@/components/home/BusinessBenefits';
-import ProcessSteps from '@/components/home/ProcessSteps';
-import PricingSection from '@/components/home/PricingSection';
-import FAQ from '@/components/home/FAQ';
-import DemoCallForm from '@/components/home/DemoCallForm';
-import { IntegrationMarquee } from '@/components/ui/integration-marquee';
-import VoiceAssistantsSection from '@/components/home/VoiceAssistantsSection';
 
 interface HomeProps {
   isDarkMode: boolean;
@@ -16,45 +8,30 @@ interface HomeProps {
 
 function Home({ isDarkMode, handleScroll }: HomeProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      {/* Hero Section */}
-      <HeroSection isDarkMode={isDarkMode} handleScroll={handleScroll} />
-      
-      {/* Integration Partners Marquee */}
-      <IntegrationMarquee isDarkMode={isDarkMode} />
-
-      {/* Voice Assistants Section */}
-      <VoiceAssistantsSection isDarkMode={isDarkMode} />
-
-      {/* Business Benefits Section */}
-      <BusinessBenefits isDarkMode={isDarkMode} />
-
-      {/* Process Steps Section */}
-      <div id="process-steps">
-        <ProcessSteps isDarkMode={isDarkMode} handleScroll={handleScroll} />
-      </div>
-
-      {/* Pricing Section */}
-      <div id="pricing">
-        <PricingSection isDarkMode={isDarkMode} />
-      </div>
-
-      {/* FAQ Section */}
-      <FAQ isDarkMode={isDarkMode} />
-
-      {/* AI Demo Call Section */}
-      <div className="relative">
-        {/* невидимый якорь */}
-        <span id="demo-call" className="block absolute -top-[72px] h-0"></span>
-      
-        {/* сама форма */}
-        <DemoCallForm isDarkMode={isDarkMode} />
-      </div>
-    </motion.div>
+    <div className="w-full bg-[#f5f5f7]">
+      <motion.section 
+        className="container mx-auto px-4 flex flex-col justify-center items-center"
+        style={{ minHeight: "calc(100vh - 200px)" }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.h1 
+          className="text-6xl md:text-8xl lg:text-9xl font-bold text-center"
+          style={{
+            background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          Home Page
+        </motion.h1>
+      </motion.section>
+    </div>
   );
 }
 

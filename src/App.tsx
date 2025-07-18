@@ -12,6 +12,7 @@ import { PageLoader } from '@/components/layout/PageLoader';
 
 // Lazy loaded pages
 const Home = React.lazy(() => import('./pages/Home'));
+const VoiceAI = React.lazy(() => import('./pages/VoiceAI'));
 
 function App() {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
@@ -70,6 +71,7 @@ function App() {
           <React.Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Home isDarkMode={isDarkMode} handleScroll={handleScroll} />} />
+              <Route path="/voice-ai" element={<VoiceAI isDarkMode={isDarkMode} handleScroll={handleScroll} />} />
             </Routes>
           </React.Suspense>
         </main>
