@@ -193,34 +193,34 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
           </motion.div>
           
           <motion.div 
-            className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2"
-            variants={staggerContainer}
-          >
-            <motion.button
-              className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-4 py-1.5 text-sm font-medium"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              variants={fadeIn}
-            >
-              Let's Partner up
-            </motion.button>
-            
-            <motion.button
-              onClick={() => window.location.href = '/voice-ai'}
-              className="text-[#1a1a1a] font-semibold text-sm hover:text-gray-900 transition-colors"
-              variants={fadeIn}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Voice AI Agents
-            </motion.button>
-          </motion.div>
-          
-          <motion.div 
             className="flex items-center gap-4"
             variants={staggerContainer}
           >
+            <motion.div 
+              className="hidden md:flex items-center gap-6"
+              variants={staggerContainer}
+            >
+              <motion.button
+                onClick={() => window.location.href = '/voice-ai'}
+                className="text-[#1a1a1a] font-semibold text-sm hover:text-gray-900 transition-colors"
+                variants={fadeIn}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Voice AI Agents
+              </motion.button>
+              
+              <motion.button
+                className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-4 py-1.5 text-sm font-medium"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                variants={fadeIn}
+              >
+                Let's Partner up
+              </motion.button>
+            </motion.div>
+            
             <motion.button 
               className="md:hidden touch-manipulation relative w-6 h-6 flex items-center justify-center"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
