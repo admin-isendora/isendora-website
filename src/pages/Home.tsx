@@ -82,7 +82,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
       {/* Hero Section */}
       <motion.section 
         className="container mx-auto px-4 flex flex-col justify-center items-center"
-        style={{ minHeight: "calc(100vh - 100px)", paddingTop: "50px" }}
+        style={{ minHeight: "calc(100vh - 72px)" }}
         initial="hidden"
         animate="visible"
         variants={staggerContainer}
@@ -227,6 +227,53 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
               transition={{ duration: 0.2 }}
             >
               Get your free consultation
+            </motion.button>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Voice AI Showcase Block */}
+      <motion.section 
+        className="py-20 bg-[#161616]"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-4xl mx-auto text-center"
+          >
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Experience Our
+            </h2>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8">
+              <span
+                style={{
+                  background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                Voice AI Solution
+              </span>
+            </h2>
+            <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
+              See how our AI voice assistants transform business communications with natural, intelligent conversations.
+            </p>
+            <motion.button
+              onClick={() => window.location.href = '/voice-ai'}
+              className="bg-transparent text-white border-[1.5px] border-white rounded-[999px] px-12 py-4 text-lg font-medium hover:bg-white hover:text-black transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              Explore Voice AI
             </motion.button>
           </motion.div>
         </div>
