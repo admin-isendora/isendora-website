@@ -136,10 +136,10 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-6xl mx-auto"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-right mr-[10%]">
+            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
               We don't sell AI
             </h2>
-            <h2 className="text-4xl md:text-6xl font-bold text-left ml-[10%]">
+            <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
               <span 
                 style={{
                   background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
@@ -220,7 +220,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
             className="max-w-3xl mx-auto"
           >
             <motion.button
-              className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-12 py-4 text-xl font-medium hover:bg-black hover:text-white transition-all duration-300"
+              className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-12 py-4 text-lg font-medium hover:bg-black hover:text-white transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
