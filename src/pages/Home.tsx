@@ -120,43 +120,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
         </div>
       </motion.section>
 
-      {/* Second Block */}
-      <motion.section 
-        className="py-20 bg-white"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-6xl mx-auto"
-          >
-            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
-              We don't sell AI
-            </h2>
-            <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
-              <span
-                className="pb-2"
-                style={{
-                  background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}
-              >
-                We sell Results
-              </span>
-            </h2>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Stats Section */}
+      {/* Stats Section - Second Block */}
       <motion.section 
         className="py-20 bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
@@ -204,9 +168,45 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
         </div>
       </motion.section>
 
-      {/* CTA Section */}
+      {/* Third Block - We don't sell AI / We sell Results */}
       <motion.section 
-        className="py-20 bg-white"
+        className="py-20 bg-[#f5f5f7]"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-6xl mx-auto"
+          >
+            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
+              We don't sell AI
+            </h2>
+            <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
+              <span
+                className="pb-2"
+                style={{
+                  background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                We sell Results
+              </span>
+            </h2>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* CTA Section - Fourth Block */}
+      <motion.section 
+        className="py-20 bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -232,7 +232,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
         </div>
       </motion.section>
 
-      {/* Voice AI Showcase Block */}
+      {/* Voice AI Showcase Block - Fifth Block */}
       <motion.section 
         className="py-20 bg-[#161616]"
         initial={{ opacity: 0 }}
