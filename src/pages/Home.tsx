@@ -140,7 +140,8 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
               We don't sell AI
             </h2>
             <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
-                className="absolute pb-2"
+              <span
+                className="pb-2"
                 style={{
                   background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
                   WebkitBackgroundClip: 'text',
