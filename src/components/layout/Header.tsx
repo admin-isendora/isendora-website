@@ -13,6 +13,7 @@ interface HeaderProps {
   toggleDarkMode: () => void;
 }
 
+// Supabase logo URL - проверяем подключение
 const LOGO_URL = "https://psymmxfknulxspcbvqmr.supabase.co/storage/v1/object/sign/logos/logo_website.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNTI1NmExNi01MjY0LTQ3ZTgtODZiMi02MGIxNDk1MDQ4MTEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJsb2dvcy9sb2dvX3dlYnNpdGUucG5nIiwiaWF0IjoxNzUxNTQxNjQxLCJleHAiOjIwNjY5MDE2NDF9.KHbxut1mSTpj0rEXczK5M_y1DOE38I7AwWwwQr-vj0Y";
 
 export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, toggleDarkMode }: HeaderProps) {
@@ -21,17 +22,29 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Preload logo image
+    // Preload logo image from Supabase
     const preloadImage = new Image();
     preloadImage.src = LOGO_URL;
+    
+    console.log('Loading logo from Supabase:', LOGO_URL);
     
     if (logoRef.current) {
       logoRef.current.style.opacity = '0';
       
       preloadImage.onload = () => {
+        console.log('Logo loaded successfully from Supabase');
         if (logoRef.current) {
           logoRef.current.style.opacity = '1';
           logoRef.current.style.transition = 'opacity 0.3s ease';
+        }
+      };
+      
+      preloadImage.onerror = (error) => {
+        console.error('Failed to load logo from Supabase:', error);
+        console.log('Supabase URL:', LOGO_URL);
+        // Fallback - показываем текст если лого не загрузилось
+        if (logoRef.current) {
+          logoRef.current.style.display = 'none';
         }
       };
     }
