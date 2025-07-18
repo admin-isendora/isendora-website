@@ -89,12 +89,12 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
       >
         <div className="text-center max-w-4xl">
           <motion.div 
-            className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight"
+            className="text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9]"
             variants={fadeInUp}
           >
-            <div className="text-[#1a1a1a] mb-2">We are AI</div>
+            <div className="text-[#1a1a1a] mb-1">We are AI</div>
             
-            <div className="relative h-[1.2em] flex items-center justify-center mb-2 text-6xl md:text-8xl lg:text-9xl">
+            <div className="relative h-[1.2em] flex items-center justify-center mb-1 text-6xl md:text-8xl lg:text-9xl">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentWordIndex}
@@ -102,7 +102,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  className="absolute"
+                  className="absolute pb-3"
                   style={{
                     background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
                     WebkitBackgroundClip: 'text',
@@ -140,7 +140,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
               We don't sell AI
             </h2>
             <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
-              <span 
+                className="absolute pb-2"
                 style={{
                   background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
                   WebkitBackgroundClip: 'text',
@@ -242,7 +242,7 @@ function CountUpNumber({ target, suffix = '', className }: { target: number; suf
   useEffect(() => {
     if (!hasStarted) return;
     
-    const duration = 2000; // 2 seconds
+    const duration = 2400; // 2.4 seconds (20% slower)
     const steps = 60; // 60 steps for smooth animation
     const increment = target / steps;
     const stepDuration = duration / steps;
