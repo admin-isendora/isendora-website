@@ -171,7 +171,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
           
           {/* Sliding form */}
           <motion.div
-            className="fixed top-0 right-0 h-full w-full max-w-md md:max-w-lg z-50 bg-white shadow-2xl overflow-y-auto"
+            className="fixed top-1/2 right-8 -translate-y-1/2 w-full max-w-md md:max-w-lg z-50 bg-[#f5f5f7] shadow-2xl overflow-y-auto rounded-2xl max-h-[80vh]"
             variants={slideVariants}
             initial="hidden"
             animate="visible"
@@ -219,7 +219,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="Name"
-                        className="w-full px-0 py-3 border-0 border-b-2 border-gray-200 focus:border-gray-900 focus:ring-0 bg-transparent text-gray-900 placeholder-gray-500"
+                        className="w-full px-3 py-2 border-2 border-blue-400 rounded-md focus:border-blue-600 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
                         required
                       />
                       {formErrors.name && (
@@ -237,7 +237,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="Email"
-                        className="w-full px-0 py-3 border-0 border-b-2 border-gray-200 focus:border-gray-900 focus:ring-0 bg-transparent text-gray-900 placeholder-gray-500"
+                        className="w-full px-3 py-2 border-2 border-blue-400 rounded-md focus:border-blue-600 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
                         required
                       />
                       {formErrors.email && (
@@ -257,7 +257,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       value={formData.companyWebsite}
                       onChange={handleInputChange}
                       placeholder="Enter company website"
-                      className="w-full px-0 py-3 border-0 border-b-2 border-gray-200 focus:border-gray-900 focus:ring-0 bg-transparent text-gray-900 placeholder-gray-500"
+                      className="w-full px-3 py-2 border-2 border-blue-400 rounded-md focus:border-blue-600 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
                     />
                     {formErrors.companyWebsite && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.companyWebsite}</p>
@@ -273,7 +273,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       name="services"
                       value={formData.services}
                       onChange={handleInputChange}
-                      className="w-full px-0 py-3 border-0 border-b-2 border-gray-200 focus:border-gray-900 focus:ring-0 bg-transparent text-gray-900"
+                      className="w-full px-3 py-2 border-2 border-blue-400 rounded-md focus:border-blue-600 focus:ring-0 bg-white text-gray-900 focus:outline-none"
                       required
                     >
                       <option value="">Select a service</option>
@@ -297,7 +297,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       placeholder="(234) 567-8901"
-                      className="w-full px-0 py-3 border-0 border-b-2 border-gray-200 focus:border-gray-900 focus:ring-0 bg-transparent text-gray-900 placeholder-gray-500"
+                      className="w-full px-3 py-2 border-2 border-blue-400 rounded-md focus:border-blue-600 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
                       required
                     />
                     {formErrors.phoneNumber && (
