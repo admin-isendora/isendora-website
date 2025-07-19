@@ -185,8 +185,8 @@ function Home({ isDarkMode, handleScroll, onContactFormOpen }: HomeProps) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-6xl mx-auto"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
-              <span className="ml-1">We don't sell AI</span>
+            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[3%]">
+              <span className="ml-4">We don't sell AI</span>
             </h2>
             <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
               <span
