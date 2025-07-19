@@ -186,7 +186,7 @@ function Home({ isDarkMode, handleScroll, onContactFormOpen }: HomeProps) {
             className="max-w-6xl mx-auto"
           >
             <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
-              <span className="ml-2">We don't sell AI</span>
+              <span className="ml-1">We don't sell AI</span>
             </h2>
             <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
               <span
