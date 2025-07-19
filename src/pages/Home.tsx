@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface HomeProps {
   isDarkMode: boolean;
   handleScroll: (id: string) => void;
+  onContactFormOpen: () => void;
 }
 
-function Home({ isDarkMode, handleScroll }: HomeProps) {
+function Home({ isDarkMode, handleScroll, onContactFormOpen }: HomeProps) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const words = ['Consulting', 'Automation', 'Development'];
 
@@ -221,6 +222,7 @@ function Home({ isDarkMode, handleScroll }: HomeProps) {
             className="max-w-3xl mx-auto"
           >
             <motion.button
+              onClick={onContactFormOpen}
               className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-12 py-4 text-lg font-medium hover:bg-black hover:text-white transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

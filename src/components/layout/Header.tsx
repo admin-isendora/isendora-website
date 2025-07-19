@@ -11,12 +11,13 @@ interface HeaderProps {
   handleScroll: (id: string) => void;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
+  onContactFormOpen: () => void;
 }
 
 // Supabase public logo URL
 const LOGO_URL = "https://psymmxfknulxspcbvqmr.supabase.co/storage/v1/object/public/logos/logo_website.png";
 
-export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, toggleDarkMode }: HeaderProps) {
+export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, toggleDarkMode, onContactFormOpen }: HeaderProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -211,6 +212,7 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
               </motion.button>
               
               <motion.button
+                onClick={onContactFormOpen}
                 className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-4 py-1.5 text-sm font-medium"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

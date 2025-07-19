@@ -4,6 +4,7 @@ import { useWebVitals } from '@/lib/performance-utils';
 import { Toaster } from 'sonner';
 import { LazyMotion, domAnimation } from 'framer-motion';
 import { useLenis } from '@/lib/lenis-utils';
+import { ContactFormSlider } from '@/components/ui/contact-form-slider';
 
 // Layout components
 import { Header } from '@/components/layout/Header';
@@ -18,6 +19,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isContactFormOpen, setIsContactFormOpen] = React.useState(false);
 
   // Initialize Lenis
   const lenis = useLenis();
@@ -64,13 +66,14 @@ function App() {
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
           handleScroll={handleScroll}
+          onContactFormOpen={() => setIsContactFormOpen(true)}
         />
 
         {/* Main Content */}
         <main className={`relative z-10 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} pt-[72px]`}>
           <React.Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Home isDarkMode={isDarkMode} handleScroll={handleScroll} />} />
+              <Route path="/" element={<Home isDarkMode={isDarkMode} handleScroll={handleScroll} onContactFormOpen={() => setIsContactFormOpen(true)} />} />
               <Route path="/voice-ai" element={<VoiceAI isDarkMode={isDarkMode} handleScroll={handleScroll} />} />
             </Routes>
           </React.Suspense>
@@ -78,6 +81,12 @@ function App() {
 
         {/* Footer */}
         <Footer isDarkMode={isDarkMode} />
+        
+        {/* Contact Form Slider */}
+        <ContactFormSlider 
+          isOpen={isContactFormOpen} 
+          onClose={() => setIsContactFormOpen(false)} 
+        />
         
         {/* Toast container */}
         <Toaster position="top-right" richColors closeButton />
