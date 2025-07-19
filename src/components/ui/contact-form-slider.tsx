@@ -171,7 +171,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
           
           {/* Sliding form */}
           <motion.div
-            className="fixed top-4 right-8 bottom-4 w-full max-w-md md:max-w-lg z-50 bg-[#f5f5f7] shadow-2xl rounded-2xl overflow-hidden"
+            className="fixed top-4 right-4 md:right-8 bottom-4 left-4 md:left-auto w-auto md:w-full md:max-w-md lg:max-w-lg z-50 bg-[#f5f5f7] shadow-2xl rounded-2xl overflow-hidden"
             variants={slideVariants}
             initial="hidden"
             animate="visible"
@@ -277,9 +277,9 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       required
                     >
                       <option value="">Select a service</option>
-                      <option value="consulting">Consulting</option>
-                      <option value="voice-agents">Voice Agents</option>
-                      <option value="custom-ai">Developing custom AI solution</option>
+                      <option value="ai-consulting">AI Consulting</option>
+                      <option value="voice-ai-agents">Voice AI Agents</option>
+                      <option value="custom-ai-solution">Developing custom AI solution</option>
                     </select>
                     {formErrors.services && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.services}</p>
