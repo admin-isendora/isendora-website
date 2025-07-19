@@ -171,58 +171,26 @@ function Home({ isDarkMode, handleScroll, onContactFormOpen }: HomeProps) {
 
       {/* Third Block - We don't sell AI / We sell Results */}
       <motion.section 
-        className="py-24 md:py-32 bg-[#f5f5f7] relative overflow-hidden"
+        className="py-20 bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
       >
-        {/* Subtle background decoration */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-[#FF7A00] to-[#FF4D4D] blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-[#FF4D4D] to-[#9333EA] blur-3xl"></div>
-        </div>
-        
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-7xl mx-auto relative z-10"
+            className="max-w-6xl mx-auto"
           >
-            <div className="text-center space-y-8">
-              {/* First line with subtle animation */}
-              <motion.h2 
-                className="text-5xl md:text-7xl lg:text-8xl font-bold text-[#1a1a1a] leading-[0.9]"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-              >
-                We don't sell AI
-              </motion.h2>
-              
-              {/* Elegant divider */}
-              <motion.div 
-                className="flex items-center justify-center space-x-4"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <div className="h-px w-16 bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-[#FF7A00] to-[#FF4D4D]"></div>
-                <div className="h-px w-16 bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-              </motion.div>
-              
-              {/* Second line with gradient */}
-              <motion.h2 
-                className="text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9]"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.5 }}
+            <h2 className="text-4xl md:text-6xl font-bold text-[#1a1a1a] mb-4 text-left ml-[10%]">
+              <span className="ml-4">We don't sell AI</span>
+            </h2>
+            <h2 className="text-4xl md:text-6xl font-bold text-right mr-[10%]">
+              <span
+                className="pb-2 mr-4"
                 style={{
                   background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
                   WebkitBackgroundClip: 'text',
@@ -231,15 +199,15 @@ function Home({ isDarkMode, handleScroll, onContactFormOpen }: HomeProps) {
                 }}
               >
                 We sell Results
-              </motion.h2>
-            </div>
+              </span>
+            </h2>
           </motion.div>
         </div>
       </motion.section>
 
       {/* CTA Section - Fourth Block */}
       <motion.section 
-        className="py-16 md:py-20 bg-[#f5f5f7] relative"
+        className="py-20 bg-[#f5f5f7]"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -253,29 +221,14 @@ function Home({ isDarkMode, handleScroll, onContactFormOpen }: HomeProps) {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-3xl mx-auto"
           >
-            {/* Subtle text above button */}
-            <motion.p 
-              className="text-lg md:text-xl text-gray-600 mb-8 font-light"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Ready to transform your business?
-            </motion.p>
-            
             <motion.button
               onClick={onContactFormOpen}
-              className="group bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-12 py-4 text-lg font-medium hover:bg-black hover:text-white transition-all duration-300 relative overflow-hidden"
+              className="bg-transparent text-black border-[1.5px] border-[#1D1D1F] rounded-[999px] px-12 py-4 text-lg font-medium hover:bg-black hover:text-white transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
-              <span className="relative z-10">
-                Get your free consultation
-              </span>
-              {/* Subtle hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF7A00] via-[#FF4D4D] to-[#9333EA] opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+              Get your free consultation
             </motion.button>
           </motion.div>
         </div>
