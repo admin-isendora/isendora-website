@@ -171,13 +171,13 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
           
           {/* Sliding form */}
           <motion.div
-            className="fixed top-1/2 right-8 -translate-y-1/2 w-full max-w-md md:max-w-lg z-50 bg-[#f5f5f7] shadow-2xl rounded-2xl"
+            className="fixed top-4 right-8 bottom-4 w-full max-w-md md:max-w-lg z-50 bg-[#f5f5f7] shadow-2xl rounded-2xl overflow-hidden"
             variants={slideVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
-            <div className="p-6 md:p-8 max-h-[80vh] overflow-y-auto">
+            <div className="p-6 md:p-8 h-full overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
