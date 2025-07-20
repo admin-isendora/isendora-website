@@ -50,6 +50,11 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
   const monthlyMinutesCost = totalMinutesMonthly * COST_PER_MINUTE;
   const totalMonthlyCost = monthlyMinutesCost + MONTHLY_SOFTWARE_FEE;
 
+  // Net revenue recovery (revenue saved minus service cost)
+  const netMonthlyRecovery = monthlyLoss - totalMonthlyCost;
+  const netDailyRecovery = netMonthlyRecovery / 30;
+  const netYearlyRecovery = netMonthlyRecovery * 12;
+
   // Format numbers
   const formatNumber = (num: number, decimals: number = 0) => {
     if (decimals > 0 && num % 1 === 0) {
@@ -163,7 +168,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     Booking Conversion Rate
                   </label>
                   <div className="flex items-center">
-                    <input
+                    <div className="flex items-center">
+                      <span className={`mr-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>%</span>
+                      <input
                       type="number"
                       value={conversionRate}
                       onChange={(e) => setConversionRate(e.target.value)}
@@ -175,7 +182,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                         WebkitAppearance: 'none'
                       }}
                     />
-                    <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>%</span>
+                    </div>
                   </div>
                 </div>
 
@@ -184,7 +191,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     Missed Call Rate
                   </label>
                   <div className="flex items-center">
-                    <input
+                    <div className="flex items-center">
+                      <span className={`mr-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>%</span>
+                      <input
                       type="number"
                       value={missedRate}
                       onChange={(e) => setMissedRate(e.target.value)}
@@ -196,7 +205,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                         WebkitAppearance: 'none'
                       }}
                     />
-                    <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>%</span>
+                    </div>
                   </div>
                 </div>
 
@@ -205,8 +214,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     Average Order Value
                   </label>
                   <div className="flex items-center">
-                    <span className={`mr-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>$</span>
-                    <input
+                    <div className="flex items-center">
+                      <span className={`mr-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>$</span>
+                      <input
                       type="number"
                       value={averageOrderValue}
                       onChange={(e) => setAverageOrderValue(e.target.value)}
@@ -217,6 +227,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                         WebkitAppearance: 'none'
                       }}
                     />
+                    </div>
                   </div>
                 </div>
 
@@ -225,7 +236,8 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     Avg call:
                   </label>
                   <div className="flex items-center">
-                    <input
+                    <div className="flex items-center">
+                      <input
                       type="number"
                       value={callDuration}
                       onChange={(e) => setCallDuration(e.target.value)}
@@ -237,7 +249,8 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                         WebkitAppearance: 'none'
                       }}
                     />
-                    <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>min</span>
+                      <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>min</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,19 +287,19 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
 
                 <div className="grid grid-cols-3 gap-3">
                   <div className="text-center">
-                    <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
+                    <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
                       {formatNumber(totalCalls)}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>calls daily</div>
                   </div>
                   <div className="text-center">
-                    <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
+                    <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
                       {formatNumber(potentialCustomers, 1)}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>bookings</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-xl font-bold text-red-600 mb-1">
+                    <div className="text-2xl md:text-3xl font-bold text-red-600 mb-1">
                       {formatNumber(lostCustomers, 1)}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>customers lost</div>
@@ -328,25 +341,25 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
               </div>
 
               {/* Revenue Recovery */}
-              <div className="bg-green-500 rounded-xl p-4 text-white text-center">
-                <h3 className="text-sm font-bold uppercase tracking-wide mb-3 text-green-100">
+              <div className="bg-green-400 rounded-xl p-4 text-white text-center">
+                <h3 className="text-sm font-bold uppercase tracking-wide mb-3 text-green-50">
                   Your Revenue Recovery
                 </h3>
                 <div className="text-2xl md:text-3xl font-bold mb-4">
-                  {formatCurrency(monthlyLoss)}
+                  {formatCurrency(Math.max(0, netMonthlyRecovery))}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <div className="text-base font-bold">
-                      {formatCurrency(dailyLoss)}
+                      {formatCurrency(Math.max(0, netDailyRecovery))}
                     </div>
-                    <div className="text-xs text-green-100">saved daily</div>
+                    <div className="text-xs text-green-50">saved daily</div>
                   </div>
                   <div>
                     <div className="text-base font-bold">
-                      {formatCurrency(yearlyLoss)}
+                      {formatCurrency(Math.max(0, netYearlyRecovery))}
                     </div>
-                    <div className="text-xs text-green-100">saved yearly</div>
+                    <div className="text-xs text-green-50">saved yearly</div>
                   </div>
                 </div>
               </div>

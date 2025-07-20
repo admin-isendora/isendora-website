@@ -159,7 +159,7 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
   };
 
   const navLinks = [
-    { label: 'Voice AI', href: '/voice-ai' }
+    { label: window.location.pathname === '/voice-ai' ? 'Home' : 'Voice AI Agents', href: window.location.pathname === '/voice-ai' ? '/' : '/voice-ai' }
   ];
 
   return (
@@ -202,13 +202,13 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
               variants={staggerContainer}
             >
               <motion.button
-                onClick={() => window.location.href = '/voice-ai'}
+                onClick={() => window.location.href = window.location.pathname === '/voice-ai' ? '/' : '/voice-ai'}
                 className="text-[#1a1a1a] font-semibold text-sm hover:text-gray-900 transition-colors"
                 variants={fadeIn}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Voice AI Agents
+                {window.location.pathname === '/voice-ai' ? 'Home' : 'Voice AI Agents'}
               </motion.button>
               
               <motion.button
@@ -297,6 +297,17 @@ export function Header({ isMenuOpen, setIsMenuOpen, handleScroll, isDarkMode, to
                     {link.label}
                   </motion.button>
                 ))}
+                
+                <motion.button
+                  onClick={() => {
+                    onContactFormOpen();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left text-[#1a1a1a] font-semibold text-sm hover:text-gray-900 transition-colors py-3"
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Let's Partner up
+                </motion.button>
               </div>
             </motion.div>
           </FocusTrap>

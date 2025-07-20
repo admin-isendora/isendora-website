@@ -37,8 +37,8 @@ function VoiceAI({ isDarkMode, handleScroll }: VoiceAIProps) {
       {/* Business Benefits Section */}
       <BusinessBenefits isDarkMode={isDarkMode} />
 
-      {/* Process Steps Section - Hidden for now */}
-      <div id="process-steps" style={{ display: 'none' }}>
+      {/* Process Steps Section */}
+      <div id="process-steps">
         <ProcessSteps isDarkMode={isDarkMode} handleScroll={handleScroll} />
       </div>
 
