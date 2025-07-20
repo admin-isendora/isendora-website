@@ -8,6 +8,7 @@ import FAQ from '@/components/home/FAQ';
 import DemoCallForm from '@/components/home/DemoCallForm';
 import { IntegrationMarquee } from '@/components/ui/integration-marquee';
 import VoiceAssistantsSection from '@/components/home/VoiceAssistantsSection';
+import ROICalculator from '@/components/home/ROICalculator';
 
 interface VoiceAIProps {
   isDarkMode: boolean;
@@ -29,6 +30,9 @@ function VoiceAI({ isDarkMode, handleScroll }: VoiceAIProps) {
 
       {/* Voice Assistants Section */}
       <VoiceAssistantsSection isDarkMode={isDarkMode} />
+
+      {/* ROI Calculator Section */}
+      <ROICalculator isDarkMode={isDarkMode} />
 
       {/* Business Benefits Section */}
       <BusinessBenefits isDarkMode={isDarkMode} />
