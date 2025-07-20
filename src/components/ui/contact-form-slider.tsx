@@ -40,6 +40,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string>('');
 
   // Close on escape key
   useEffect(() => {
@@ -70,6 +71,11 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
+    
+    // Clear submit error when user starts typing
+    if (submitError) {
+      setSubmitError('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,6 +94,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
     }
 
     setIsSubmitting(true);
+    setSubmitError('');
     
     try {
       // Get contact form webhook URL from environment variable
@@ -109,22 +116,25 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
         })
       });
 
-      if (response.ok) {
-        setSubmitSuccess(true);
-        setTimeout(() => {
-          onClose();
-          setSubmitSuccess(false);
-          setFormData({
-            name: '',
-            email: '',
-            companyWebsite: '',
-            services: '',
-            phoneNumber: ''
-          });
-        }, 2000);
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
       }
+      
+      setSubmitSuccess(true);
+      setTimeout(() => {
+        onClose();
+        setSubmitSuccess(false);
+        setFormData({
+          name: '',
+          email: '',
+          companyWebsite: '',
+          services: '',
+          phoneNumber: ''
+        });
+      }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmitError('Failed to submit form. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -308,6 +318,13 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>
                     )}
                   </div>
+
+                  {/* Submit Error */}
+                  {submitError && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p className="text-red-600 text-sm">{submitError}</p>
+                    </div>
+                  )}
 
                   {/* Submit Button */}
                   <div className="pt-6">
