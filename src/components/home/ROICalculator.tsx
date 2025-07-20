@@ -52,8 +52,15 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
 
   // Format numbers
   const formatNumber = (num: number, decimals: number = 0) => {
+    if (decimals > 0 && num % 1 === 0) {
+      // If it's a whole number, don't show decimal places
+      return num.toLocaleString('en-US', { 
+        minimumFractionDigits: 0, 
+        maximumFractionDigits: 0 
+      });
+    }
     return num.toLocaleString('en-US', { 
-      minimumFractionDigits: decimals, 
+      minimumFractionDigits: 0, 
       maximumFractionDigits: decimals 
     });
   };
@@ -89,21 +96,21 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
 
   return (
     <motion.section 
-      className="py-16 bg-[#f5f5f7]"
+      className="py-12 bg-[#f5f5f7]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
       <div className="container mx-auto px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
             
             {/* Left Section - Inputs */}
-            <motion.div variants={itemVariants} className="space-y-6">
+            <motion.div variants={itemVariants} className="space-y-4">
               {/* Header */}
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-2">
                   How many calls do you get?
                 </h2>
                 <p className="text-gray-600">
@@ -112,10 +119,10 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
               </div>
 
               {/* Calls Input Block */}
-              <div className="bg-gray-100 rounded-xl p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">
+                    <label className={`block text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2 uppercase tracking-wide`}>
                       Working Hours
                     </label>
                     <input
@@ -123,11 +130,22 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       value={workingCalls}
                       onChange={(e) => setWorkingCalls(e.target.value)}
                       placeholder="30"
-                      className="w-full h-16 text-2xl font-bold text-center bg-white border-2 border-green-400 rounded-lg focus:outline-none focus:border-green-500"
+                      className={`w-20 h-12 text-xl font-bold text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border-2 rounded-lg focus:outline-none focus:border-gray-500 mx-auto block`}
+                      style={{ 
+                        MozAppearance: 'textfield',
+                        WebkitAppearance: 'none'
+                      }}
                     />
+                    <style jsx>{`
+                      input[type=number]::-webkit-outer-spin-button,
+                      input[type=number]::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                      }
+                    `}</style>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">
+                    <label className={`block text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2 uppercase tracking-wide`}>
                       After Hours
                     </label>
                     <input
@@ -135,16 +153,20 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       value={afterHoursCalls}
                       onChange={(e) => setAfterHoursCalls(e.target.value)}
                       placeholder="2"
-                      className="w-full h-16 text-2xl font-bold text-center bg-white border-2 border-green-400 rounded-lg focus:outline-none focus:border-green-500"
+                      className={`w-20 h-12 text-xl font-bold text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border-2 rounded-lg focus:outline-none focus:border-gray-500 mx-auto block`}
+                      style={{ 
+                        MozAppearance: 'textfield',
+                        WebkitAppearance: 'none'
+                      }}
                     />
                   </div>
                 </div>
               </div>
 
               {/* Parameters */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="text-lg font-medium text-gray-900">
+                  <label className={`text-base font-medium ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                     Booking Conversion Rate
                   </label>
                   <div className="flex items-center">
@@ -154,14 +176,14 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       onChange={(e) => setConversionRate(e.target.value)}
                       placeholder="30"
                       max="100"
-                      className="w-20 h-10 text-center bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+                      className={`w-16 h-8 text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded focus:outline-none focus:border-gray-500`}
                     />
-                    <span className="ml-2 text-gray-500">%</span>
+                    <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>%</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="text-lg font-medium text-gray-900">
+                  <label className={`text-base font-medium ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                     Missed Call Rate
                   </label>
                   <div className="flex items-center">
@@ -171,30 +193,30 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       onChange={(e) => setMissedRate(e.target.value)}
                       placeholder="20"
                       max="100"
-                      className="w-20 h-10 text-center bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+                      className={`w-16 h-8 text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded focus:outline-none focus:border-gray-500`}
                     />
-                    <span className="ml-2 text-gray-500">%</span>
+                    <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>%</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="text-lg font-medium text-gray-900">
+                  <label className={`text-base font-medium ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                     Average Order Value
                   </label>
                   <div className="flex items-center">
-                    <span className="mr-2 text-gray-500">$</span>
+                    <span className={`mr-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>$</span>
                     <input
                       type="number"
                       value={averageOrderValue}
                       onChange={(e) => setAverageOrderValue(e.target.value)}
                       placeholder="100"
-                      className="w-20 h-10 text-center bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+                      className={`w-16 h-8 text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded focus:outline-none focus:border-gray-500`}
                     />
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                  <label className="text-sm font-medium text-gray-500">
+                <div className={`flex items-center justify-between pt-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <label className={`text-base font-medium ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                     Avg call:
                   </label>
                   <div className="flex items-center">
@@ -204,28 +226,28 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       onChange={(e) => setCallDuration(e.target.value)}
                       min="1"
                       max="30"
-                      className="w-16 h-8 text-center bg-gray-100 border border-gray-300 rounded focus:outline-none focus:border-gray-500"
+                      className={`w-16 h-8 text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded focus:outline-none focus:border-gray-500`}
                     />
-                    <span className="ml-2 text-gray-500 text-sm">min</span>
+                    <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>min</span>
                   </div>
                 </div>
               </div>
             </motion.div>
 
             {/* Right Section - Results */}
-            <motion.div variants={itemVariants} className="space-y-6">
+            <motion.div variants={itemVariants} className="space-y-4">
               
               {/* Current Situation */}
-              <div className="bg-yellow-100 rounded-xl p-6 relative">
+              <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 relative border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide">
+                  <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide`}>
                     Current Situation
                   </h3>
                   <button
                     onClick={() => setShowTooltip(!showTooltip)}
-                    className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center hover:bg-yellow-500 transition-colors"
+                    className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
                   >
-                    <HelpCircle className="w-4 h-4 text-white" />
+                    <HelpCircle className="w-3 h-3 text-white" />
                   </button>
                 </div>
 
@@ -233,62 +255,62 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="absolute top-16 right-0 bg-gray-900 text-white p-4 rounded-lg shadow-lg z-10 max-w-xs"
+                    className="absolute top-12 right-0 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-10 max-w-xs"
                   >
-                    <p className="text-sm">
+                    <p className="text-xs">
                       Based on your inputs: From {formatNumber(totalCalls)} daily calls, {formatNumber(conversionRateNum)}% want to book ({formatNumber(potentialCustomers, 1)} customers). But {formatNumber(missedRateNum)}% of these are lost due to missed calls ({formatNumber(lostCustomers, 1)} customers × ${formatNumber(averageOrderValueNum)} = lost revenue).
                     </p>
                   </motion.div>
                 )}
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-3">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900 mb-1">
+                    <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
                       {formatNumber(totalCalls)}
                     </div>
-                    <div className="text-sm text-gray-600">calls daily</div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>calls daily</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900 mb-1">
+                    <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
                       {formatNumber(potentialCustomers, 1)}
                     </div>
-                    <div className="text-sm text-gray-600">bookings</div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>bookings</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-red-600 mb-1">
+                    <div className="text-2xl font-bold text-red-600 mb-1">
                       {formatNumber(lostCustomers, 1)}
                     </div>
-                    <div className="text-sm text-gray-600">customers lost</div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>customers lost</div>
                   </div>
                 </div>
               </div>
 
               {/* Voice AI Agent Service */}
-              <div className="bg-blue-100 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wide mb-4">
+              <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+                <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide mb-3`}>
                   Voice AI Agent Service
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-blue-600">
+                    <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                       {formatNumber(totalMinutesDaily)}
                     </span>
-                    <span className="text-gray-600">minutes daily</span>
+                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>minutes daily</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-blue-600">
+                    <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                       {formatNumber(totalMinutesMonthly)}
                     </span>
-                    <span className="text-gray-600">minutes monthly</span>
+                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>minutes monthly</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Software fee:</span>
-                    <span className="font-bold">{formatCurrency(MONTHLY_SOFTWARE_FEE)}</span>
+                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Software fee:</span>
+                    <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>{formatCurrency(MONTHLY_SOFTWARE_FEE)}</span>
                   </div>
-                  <div className="border-t border-blue-200 pt-3">
+                  <div className={`border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} pt-2`}>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Total monthly cost</span>
-                      <span className="text-3xl font-bold text-blue-600">
+                      <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total monthly cost</span>
+                      <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                         {formatCurrency(totalMonthlyCost)}
                       </span>
                     </div>
@@ -297,25 +319,25 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
               </div>
 
               {/* Revenue Recovery */}
-              <div className="bg-green-500 rounded-xl p-6 text-white text-center">
-                <h3 className="text-lg font-bold uppercase tracking-wide mb-4 text-green-100">
+              <div className="bg-green-500 rounded-xl p-4 text-white text-center">
+                <h3 className="text-sm font-bold uppercase tracking-wide mb-3 text-green-100">
                   Your Revenue Recovery
                 </h3>
-                <div className="text-5xl font-bold mb-6">
+                <div className="text-3xl md:text-4xl font-bold mb-4">
                   {formatCurrency(monthlyLoss)}
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <div className="text-2xl font-bold">
+                    <div className="text-lg font-bold">
                       {formatCurrency(dailyLoss)}
                     </div>
-                    <div className="text-green-100">saved daily</div>
+                    <div className="text-xs text-green-100">saved daily</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold">
+                    <div className="text-lg font-bold">
                       {formatCurrency(yearlyLoss)}
                     </div>
-                    <div className="text-green-100">saved yearly</div>
+                    <div className="text-xs text-green-100">saved yearly</div>
                   </div>
                 </div>
               </div>
