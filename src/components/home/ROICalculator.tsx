@@ -17,7 +17,6 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   // Constants
-  const REVENUE_GROWTH = 0.20;
   const COST_PER_MINUTE = 0.35;
   const MONTHLY_SOFTWARE_FEE = 150;
 
@@ -40,7 +39,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
   const lostCustomers = potentialCustomers * (missedRateNum / 100);
 
   // Revenue loss
-  const dailyLoss = lostCustomers * averageOrderValueNum * (1 + REVENUE_GROWTH);
+  const dailyLoss = lostCustomers * averageOrderValueNum;
   const monthlyLoss = dailyLoss * 30;
   const yearlyLoss = dailyLoss * 365;
 
@@ -236,7 +235,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     Avg call:
                   </label>
                   <div className="flex items-center">
-                    <div className="flex items-center">
+                    <div className="flex items-center gap-2">
                       <input
                       type="number"
                       value={callDuration}
@@ -249,7 +248,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                         WebkitAppearance: 'none'
                       }}
                     />
-                      <span className={`ml-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>min</span>
+                      <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>min</span>
                     </div>
                   </div>
                 </div>
