@@ -90,8 +90,12 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
     setIsSubmitting(true);
     
     try {
-      // Here you would send to your webhook
-      const webhookUrl = "https://isendora.app.n8n.cloud/webhook/c1a786cb-c26d-447c-a1e4-c1d0288d3184";
+      // Get webhook URL from environment variable
+      const webhookUrl = import.meta.env.VITE_WEBHOOK_DEMO_URL;
+      
+      if (!webhookUrl) {
+        throw new Error('Webhook URL not configured');
+      }
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
