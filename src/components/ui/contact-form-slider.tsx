@@ -106,6 +106,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -134,7 +135,11 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
-      setSubmitError('Failed to submit form. Please check your connection and try again.');
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        setSubmitError('Unable to connect to the server. Please check your internet connection or try again later.');
+      } else {
+        setSubmitError('Failed to submit form. Please check your connection and try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
