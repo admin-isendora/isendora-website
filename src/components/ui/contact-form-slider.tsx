@@ -90,11 +90,11 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
     setIsSubmitting(true);
     
     try {
-      // Get webhook URL from environment variable
-      const webhookUrl = import.meta.env.VITE_WEBHOOK_DEMO_URL;
+      // Get contact form webhook URL from environment variable
+      const webhookUrl = import.meta.env.VITE_WEBHOOK_CONTACT_URL;
       
       if (!webhookUrl) {
-        throw new Error('Webhook URL not configured');
+        throw new Error('Contact webhook URL not configured');
       }
       
       const response = await fetch(webhookUrl, {
