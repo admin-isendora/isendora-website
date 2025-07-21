@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { z } from 'zod';
+import { phoneNumberSchema } from '../lib/phone-validation';
 
 interface ContactFormSliderProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ const formSchema = z.object({
     .optional()
     .or(z.literal('')),
   services: z.string().min(1, { message: 'Please select a service' }),
-  phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number' })
+  phoneNumber: phoneNumberSchema
 });
 
 export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
@@ -116,7 +117,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
           'Origin': window.location.origin
         },
         body: JSON.stringify({
-          ...formData,
+          ...validationResult.data,
           submittedAt: new Date().toISOString(),
           source: 'contact-form-slider'
         })
