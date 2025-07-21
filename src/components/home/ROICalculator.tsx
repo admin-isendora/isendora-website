@@ -326,7 +326,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
               </div>
 
               {/* Revenue Recovery */}
-              <div className="rounded-xl p-6 text-white text-center" style={{ backgroundColor: '#7dd3a0' }}>
+              <div className="bg-emerald-300 rounded-xl p-6 text-white text-center">
                 <h3 className="text-sm font-bold uppercase tracking-wide mb-3 text-green-50">
                   Your Revenue Recovery
                 </h3>
