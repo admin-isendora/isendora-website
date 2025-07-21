@@ -330,7 +330,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                 <h3 className="text-sm font-bold uppercase tracking-wide mb-3 text-green-50">
                   Your Revenue Recovery
                 </h3>
-                <div className="text-3xl md:text-4xl font-bold mb-4">
+                <div className="text-3xl md:text-4xl font-bold mb-2">
                   {formatCurrency(Math.max(0, netMonthlyRecovery))}
                 </div>
                 <div className="text-xs text-green-100 mb-3 italic -mt-2">
