@@ -132,7 +132,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className={`block text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2 uppercase tracking-wide`}>
-                      Working Hours
+                      During Business Hours
                     </label>
                     <input
                       type="number"
@@ -148,7 +148,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                   </div>
                   <div>
                     <label className={`block text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2 uppercase tracking-wide`}>
-                      After Hours
+                      Outside Business Hours
                     </label>
                     <input
                       type="number"
