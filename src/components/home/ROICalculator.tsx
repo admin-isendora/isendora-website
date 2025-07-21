@@ -262,7 +262,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                   </motion.div>
                 )}
 
-                <div className="grid grid-cols-3 gap-3 pb-2">
+                <div className="grid grid-cols-3 gap-3 pb-3">
                   <div className="text-center">
                     <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
                       {formatNumber(totalCalls)}
