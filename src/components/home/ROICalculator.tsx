@@ -13,12 +13,12 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
   const [conversionRate, setConversionRate] = useState<string>('');
   const [missedRate, setMissedRate] = useState<string>('');
   const [averageOrderValue, setAverageOrderValue] = useState<string>('');
-  const [callDuration, setCallDuration] = useState<string>('3');
   const [showTooltip, setShowTooltip] = useState(false);
 
   // Constants
   const COST_PER_MINUTE = 0.35;
   const MONTHLY_SOFTWARE_FEE = 150;
+  const CALL_DURATION = 3; // Fixed at 3 minutes
 
   // Calculate values
   const getNumericValue = (value: string, placeholder: number = 0) => {
@@ -31,7 +31,6 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
   const conversionRateNum = getNumericValue(conversionRate, 30);
   const missedRateNum = getNumericValue(missedRate, 20);
   const averageOrderValueNum = getNumericValue(averageOrderValue, 100);
-  const callDurationNum = getNumericValue(callDuration, 3);
 
   // Core calculations
   const totalCalls = workingCallsNum + afterHoursCallsNum;
@@ -44,7 +43,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
   const yearlyLoss = dailyLoss * 365;
 
   // Service cost
-  const totalMinutesDaily = totalCalls * callDurationNum;
+  const totalMinutesDaily = totalCalls * CALL_DURATION;
   const totalMinutesMonthly = totalMinutesDaily * 30;
   const monthlyMinutesCost = totalMinutesMonthly * COST_PER_MINUTE;
   const totalMonthlyCost = monthlyMinutesCost + MONTHLY_SOFTWARE_FEE;
@@ -114,7 +113,13 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
             <motion.div variants={itemVariants} className="space-y-4">
               {/* Header */}
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold mb-2"
+                    style={{
+                      background: 'linear-gradient(90deg, #FF7A00 0%, #FF4D4D 50%, #9333EA 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text'
+                    }}>
                   How many calls do you get?
                 </h2>
                 <p className="text-gray-600">
@@ -229,88 +234,21 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     </div>
                   </div>
                 </div>
-
-                <div className={`flex items-center justify-between pt-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                  <label className={`text-base font-medium ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
-                    Avg call:
-                  </label>
-                  <div className="flex items-center">
-                    <div className="flex items-center gap-2">
-                      <input
-                      type="number"
-                      value={callDuration}
-                      onChange={(e) => setCallDuration(e.target.value)}
-                      min="1"
-                      max="30"
-                      className={`w-16 h-8 text-sm text-center ${isDarkMode ? 'bg-[#252525] text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded focus:outline-none focus:border-gray-500`}
-                      style={{ 
-                        MozAppearance: 'textfield',
-                        WebkitAppearance: 'none'
-                      }}
-                    />
-                      <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>min</span>
-                    </div>
-                  </div>
-                </div>
               </div>
             </motion.div>
 
             {/* Right Section - Results */}
             <motion.div variants={itemVariants} className="space-y-4">
               
-              {/* Current Situation */}
-              <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 relative border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide`}>
-                    Current Situation
-                  </h3>
-                  <button
-                    onClick={() => setShowTooltip(!showTooltip)}
-                    className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
-                  >
-                    <HelpCircle className="w-3 h-3 text-white" />
-                  </button>
-                </div>
-
-                {showTooltip && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="absolute top-12 right-0 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-10 max-w-xs"
-                  >
-                    <p className="text-xs">
-                      Based on your inputs: From {formatNumber(totalCalls)} daily calls, {formatNumber(conversionRateNum)}% want to book ({formatNumber(potentialCustomers, 1)} customers). But {formatNumber(missedRateNum)}% of these are lost due to missed calls ({formatNumber(lostCustomers, 1)} customers × ${formatNumber(averageOrderValueNum)} = lost revenue).
-                    </p>
-                  </motion.div>
-                )}
-
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="text-center">
-                    <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
-                      {formatNumber(totalCalls)}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>calls daily</div>
-                  </div>
-                  <div className="text-center">
-                    <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
-                      {formatNumber(potentialCustomers, 1)}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>bookings</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl md:text-3xl font-bold text-red-600 mb-1">
-                      {formatNumber(lostCustomers, 1)}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>customers lost</div>
-                  </div>
-                </div>
-              </div>
 
               {/* Voice AI Agent Service */}
               <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
                 <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide mb-3`}>
                   Voice AI Agent Service
                 </h3>
+                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-3 italic`}>
+                  * Based on average call duration of 3 minutes
+                </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
@@ -334,6 +272,54 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                         {formatCurrency(totalMonthlyCost)}
                       </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Current Situation - moved here */}
+                <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 relative border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} mt-4`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide`}>
+                      Current Situation
+                    </h3>
+                    <button
+                      onClick={() => setShowTooltip(!showTooltip)}
+                      className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
+                    >
+                      <HelpCircle className="w-3 h-3 text-white" />
+                    </button>
+                  </div>
+
+                  {showTooltip && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute top-12 right-0 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-10 max-w-xs"
+                    >
+                      <p className="text-xs">
+                        Based on your inputs: From {formatNumber(totalCalls)} daily calls, {formatNumber(conversionRateNum)}% want to book ({formatNumber(potentialCustomers, 1)} customers). But {formatNumber(missedRateNum)}% of these are lost due to missed calls ({formatNumber(lostCustomers, 1)} customers × ${formatNumber(averageOrderValueNum)} = lost revenue).
+                      </p>
+                    </motion.div>
+                  )}
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center">
+                      <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
+                        {formatNumber(totalCalls)}
+                      </div>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>calls daily</div>
+                    </div>
+                    <div className="text-center">
+                      <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
+                        {formatNumber(potentialCustomers, 1)}
+                      </div>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>bookings</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl md:text-3xl font-bold text-red-600 mb-1">
+                        {formatNumber(lostCustomers, 1)}
+                      </div>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>customers lost</div>
                     </div>
                   </div>
                 </div>
