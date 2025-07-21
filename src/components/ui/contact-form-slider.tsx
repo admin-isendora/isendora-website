@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { z } from 'zod';
-import { phoneNumberSchema } from '../lib/phone-validation';
+import { phoneNumberSchema } from '../../lib/phone-validation';
 
 interface ContactFormSliderProps {
   isOpen: boolean;
