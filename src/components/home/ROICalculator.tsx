@@ -166,7 +166,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
               </div>
 
               {/* Parameters */}
-              <div className="space-y-3">
+              <div className="space-y-3 pl-4">
                 <div className="flex items-center justify-between">
                   <label className={`text-base font-medium ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                     Booking Conversion Rate
