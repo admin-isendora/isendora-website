@@ -333,6 +333,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                 <div className="text-3xl md:text-4xl font-bold mb-4">
                   {formatCurrency(Math.max(0, netMonthlyRecovery))}
                 </div>
+                <div className="text-xs text-green-100 mb-4 italic">
+                  * After deducting AI service costs
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-lg font-bold">
