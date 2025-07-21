@@ -135,10 +135,13 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
-      if (error instanceof TypeError && error.message === 'Failed to fetch') {
-        setSubmitError('Unable to connect to the server. Please check your internet connection or try again later.');
+      console.error('Webhook URL:', webhookUrl);
+      console.error('Form data:', formData);
+      
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        setSubmitError('Unable to connect to the server. This may be due to network issues or server configuration. Please try again later.');
       } else {
-        setSubmitError('Failed to submit form. Please check your connection and try again.');
+        setSubmitError(`Failed to submit form: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
       }
     } finally {
       setIsSubmitting(false);
