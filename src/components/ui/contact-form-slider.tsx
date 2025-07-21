@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { z } from 'zod';
-import { phoneNumberSchema } from '../../lib/phone-validation';
+import { cleanPhoneNumber, formatPhoneForDisplay, validatePhoneNumber } from '../../lib/phone-validation';
 
 interface ContactFormSliderProps {
   isOpen: boolean;
@@ -17,16 +17,23 @@ interface FormData {
   phoneNumber: string;
 }
 
-const formSchema = z.object({
+// Validation schema matching demo form
+export const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
   companyWebsite: z.string()
+    .optional()
+    .or(z.literal(''))
     .transform(val => val.startsWith('http') ? val : `https://${val}`)
     .pipe(z.string().url({ message: 'Please enter a valid website URL' }))
     .optional()
     .or(z.literal('')),
   services: z.string().min(1, { message: 'Please select a service' }),
-  phoneNumber: phoneNumberSchema
+  phoneNumber: z
+    .string()
+    .regex(/^\+[1-9]\d{1,14}$/, { 
+      message: 'Please enter a valid phone number in international format (e.g., +1234567890)' 
+    })
 });
 
 export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
@@ -38,10 +45,13 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
     phoneNumber: ''
   });
   
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [formErrors, setFormErrors] = useState<Record<string, string | undefined>>({});
+  const [formSuccess, setFormSuccess] = useState<Record<string, boolean>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string>('');
+  const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
   // Close on escape key
   useEffect(() => {
@@ -66,14 +76,136 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Clear error when user starts typing
     if (formErrors[name]) {
-      setFormErrors(prev => ({ ...prev, [name]: '' }));
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
     }
     
-    // Clear submit error when user starts typing
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle phone number input with formatting
+  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+      setFormSuccess(prev => ({
+        ...prev,
+        [name]: false
+      }));
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle phone number blur with validation
+  const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    setTouchedFields(prev => ({
+      ...prev,
+      [name]: true
+    }));
+
+    if (!value) return;
+    
+    const validation = validatePhoneNumber(value, sessionId);
+    
+    if (!validation.isValid) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: validation.message
+      }));
+      setFormSuccess(prev => ({
+        ...prev,
+        [name]: false
+      }));
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    } else {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+      setFormSuccess(prev => ({
+        ...prev,
+        [name]: true
+      }));
+      
+      if (validation.formattedNumber) {
+        e.target.value = validation.formattedNumber;
+        setFormData(prev => ({
+          ...prev,
+          [name]: validation.formattedNumber
+        }));
+      }
+    }
+  };
+
+  // Handle blur for other fields
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    setTouchedFields(prev => ({
+      ...prev,
+      [name]: true
+    }));
+
+    if (!value) return;
+
+    // Validate email on blur
+    if (name === 'email' && value) {
+      const emailResult = z.string().email().safeParse(value);
+      if (!emailResult.success) {
+        setFormErrors(prev => ({
+          ...prev,
+          [name]: 'Please enter a valid email address'
+        }));
+        return;
+      }
+    }
+
+    // Validate website URL on blur with auto-https
+    if (name === 'companyWebsite' && value) {
+      const urlToValidate = value.startsWith('http') ? value : `https://${value}`;
+      try {
+        const url = new URL(urlToValidate);
+        if (!url.hostname.includes('.')) {
+          throw new Error('Invalid domain');
+        }
+        setFormData(prev => ({
+          ...prev,
+          [name]: urlToValidate
+        }));
+        setFormErrors(prev => ({
+          ...prev,
+          [name]: undefined
+        }));
+      } catch {
+        setFormErrors(prev => ({
+          ...prev,
+          [name]: 'Please enter a valid website URL (e.g., example.com)'
+        }));
+      }
+      return;
+    }
+  };
+
+  // Clear submit error when user starts typing
+  const clearSubmitError = () => {
     if (submitError) {
       setSubmitError('');
     }
@@ -82,11 +214,26 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
-    const validationResult = formSchema.safeParse(formData);
+    // Mark all fields as touched
+    const allTouched = Object.keys(formData).reduce((acc, field) => ({
+      ...acc,
+      [field]: true
+    }), {});
+    setTouchedFields(allTouched);
+
+    // Validate form data with transformations
+    const validationResult = formSchema.safeParse({
+      ...formData,
+      companyWebsite: formData.companyWebsite 
+        ? formData.companyWebsite.startsWith('http') 
+          ? formData.companyWebsite 
+          : `https://${formData.companyWebsite}`
+        : '',
+      phoneNumber: cleanPhoneNumber(formData.phoneNumber)
+    });
     
     if (!validationResult.success) {
-      const errors: Record<string, string> = {};
+      const errors: Record<string, string | undefined> = {};
       validationResult.error.issues.forEach(issue => {
         errors[issue.path[0] as string] = issue.message;
       });
@@ -108,7 +255,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       }
       
       console.log('Submitting to webhook:', webhookUrl);
-      console.log('Form data:', validationResult.data);
+      console.log('Validated data being sent:', validationResult.data);
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
@@ -161,6 +308,9 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
           services: '',
           phoneNumber: ''
         });
+        setFormErrors({});
+        setFormSuccess({});
+        setTouchedFields({});
       }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -269,11 +419,17 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        onFocus={clearSubmitError}
                         placeholder="Name"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
+                        className={`w-full px-3 py-2 border rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none ${
+                          touchedFields.name && formErrors.name ? 'border-red-500' : 'border-gray-300'
+                        } ${
+                          formSuccess.name ? 'border-green-500' : ''
+                        }`}
                         required
                       />
-                      {formErrors.name && (
+                      {touchedFields.name && formErrors.name && (
                         <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
                       )}
                     </div>
@@ -287,11 +443,17 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
+                        onBlur={handleBlur}
+                        onFocus={clearSubmitError}
                         placeholder="Email"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
+                        className={`w-full px-3 py-2 border rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none ${
+                          touchedFields.email && formErrors.email ? 'border-red-500' : 'border-gray-300'
+                        } ${
+                          formSuccess.email ? 'border-green-500' : ''
+                        }`}
                         required
                       />
-                      {formErrors.email && (
+                      {touchedFields.email && formErrors.email && (
                         <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>
                       )}
                     </div>
@@ -307,10 +469,16 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       name="companyWebsite"
                       value={formData.companyWebsite}
                       onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      onFocus={clearSubmitError}
                       placeholder="Enter company website"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
+                      className={`w-full px-3 py-2 border rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none ${
+                        touchedFields.companyWebsite && formErrors.companyWebsite ? 'border-red-500' : 'border-gray-300'
+                      } ${
+                        formSuccess.companyWebsite ? 'border-green-500' : ''
+                      }`}
                     />
-                    {formErrors.companyWebsite && (
+                    {touchedFields.companyWebsite && formErrors.companyWebsite && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.companyWebsite}</p>
                     )}
                   </div>
@@ -324,7 +492,13 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       name="services"
                       value={formData.services}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 focus:outline-none"
+                      onBlur={handleBlur}
+                      onFocus={clearSubmitError}
+                      className={`w-full px-3 py-2 border rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 focus:outline-none ${
+                        touchedFields.services && formErrors.services ? 'border-red-500' : 'border-gray-300'
+                      } ${
+                        formSuccess.services ? 'border-green-500' : ''
+                      }`}
                       required
                     >
                       <option value="">Select a service</option>
@@ -332,7 +506,7 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       <option value="voice-ai-agents">Voice AI Agents</option>
                       <option value="custom-ai-solution">Developing custom AI solution</option>
                     </select>
-                    {formErrors.services && (
+                    {touchedFields.services && formErrors.services && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.services}</p>
                     )}
                   </div>
@@ -346,12 +520,18 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
                       type="tel"
                       name="phoneNumber"
                       value={formData.phoneNumber}
-                      onChange={handleInputChange}
+                      onChange={handlePhoneInput}
+                      onBlur={handlePhoneBlur}
+                      onFocus={clearSubmitError}
                       placeholder="(234) 567-8901"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
+                      className={`w-full px-3 py-2 border rounded-md focus:border-gray-500 focus:ring-0 bg-white text-gray-900 placeholder-gray-500 focus:outline-none ${
+                        touchedFields.phoneNumber && formErrors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+                      } ${
+                        formSuccess.phoneNumber ? 'border-green-500' : ''
+                      }`}
                       required
                     />
-                    {formErrors.phoneNumber && (
+                    {touchedFields.phoneNumber && formErrors.phoneNumber && (
                       <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>
                     )}
                   </div>
