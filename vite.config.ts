@@ -100,5 +100,12 @@ export default defineConfig(({ mode }) => ({
     headers: {
       'Cache-Control': 'public, max-age=31536000'
     },
+    proxy: {
+      '/api/contact-webhook': {
+        target: 'https://isendora.app.n8n.cloud',
+        changeOrigin: true,
+        rewrite: (path) => '/webhook/c1a786cb-c26d-447c-a1e4-c1d0288d3184'
+      }
+    }
   },
 }));
