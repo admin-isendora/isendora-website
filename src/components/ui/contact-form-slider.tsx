@@ -109,10 +109,9 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
-        mode: 'cors',
-        credentials: 'omit',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': window.location.origin
         },
         body: JSON.stringify({
           ...formData,
