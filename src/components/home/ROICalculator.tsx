@@ -341,7 +341,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                     <div className="text-xs text-green-50">saved daily</div>
                   </div>
                   <div>
-                    <div className="text-base font-bold">
+                    <div className="text-lg font-bold">
                       {formatCurrency(Math.max(0, netYearlyRecovery))}
                     </div>
                     <div className="text-xs text-green-50">saved yearly</div>
