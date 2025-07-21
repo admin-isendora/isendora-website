@@ -235,6 +235,54 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                   </div>
                 </div>
               </div>
+
+              {/* Current Situation - moved under Average Order Value */}
+              <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 relative border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide`}>
+                    Current Situation
+                  </h3>
+                  <button
+                    onClick={() => setShowTooltip(!showTooltip)}
+                    className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
+                  >
+                    <HelpCircle className="w-3 h-3 text-white" />
+                  </button>
+                </div>
+
+                {showTooltip && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute top-12 right-0 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-10 max-w-xs"
+                  >
+                    <p className="text-xs">
+                      Based on your inputs: From {formatNumber(totalCalls)} daily calls, {formatNumber(conversionRateNum)}% want to book ({formatNumber(potentialCustomers, 1)} customers). But {formatNumber(missedRateNum)}% of these are lost due to missed calls ({formatNumber(lostCustomers, 1)} customers × ${formatNumber(averageOrderValueNum)} = lost revenue).
+                    </p>
+                  </motion.div>
+                )}
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="text-center">
+                    <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
+                      {formatNumber(totalCalls)}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>calls daily</div>
+                  </div>
+                  <div className="text-center">
+                    <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
+                      {formatNumber(potentialCustomers, 1)}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>bookings</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl md:text-3xl font-bold text-red-600 mb-1">
+                      {formatNumber(lostCustomers, 1)}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>customers lost</div>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* Right Section - Results */}
@@ -272,54 +320,6 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
                       <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'}`}>
                         {formatCurrency(totalMonthlyCost)}
                       </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Current Situation - moved here */}
-                <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-xl p-4 relative border ${isDarkMode ? 'border-gray-800' : 'border-gray-200'} mt-4`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} uppercase tracking-wide`}>
-                      Current Situation
-                    </h3>
-                    <button
-                      onClick={() => setShowTooltip(!showTooltip)}
-                      className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
-                    >
-                      <HelpCircle className="w-3 h-3 text-white" />
-                    </button>
-                  </div>
-
-                  {showTooltip && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="absolute top-12 right-0 bg-gray-900 text-white p-3 rounded-lg shadow-lg z-10 max-w-xs"
-                    >
-                      <p className="text-xs">
-                        Based on your inputs: From {formatNumber(totalCalls)} daily calls, {formatNumber(conversionRateNum)}% want to book ({formatNumber(potentialCustomers, 1)} customers). But {formatNumber(missedRateNum)}% of these are lost due to missed calls ({formatNumber(lostCustomers, 1)} customers × ${formatNumber(averageOrderValueNum)} = lost revenue).
-                      </p>
-                    </motion.div>
-                  )}
-
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="text-center">
-                      <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
-                        {formatNumber(totalCalls)}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>calls daily</div>
-                    </div>
-                    <div className="text-center">
-                      <div className={`text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-[#1a1a1a]'} mb-1`}>
-                        {formatNumber(potentialCustomers, 1)}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>bookings</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl md:text-3xl font-bold text-red-600 mb-1">
-                        {formatNumber(lostCustomers, 1)}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>customers lost</div>
                     </div>
                   </div>
                 </div>
