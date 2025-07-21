@@ -104,6 +104,9 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
         throw new Error('Contact webhook URL not configured');
       }
       
+      console.log('Submitting to webhook:', webhookUrl);
+      console.log('Form data:', formData);
+      
       const response = await fetch(webhookUrl, {
         method: 'POST',
         mode: 'cors',
@@ -118,7 +121,9 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       });
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Server response:', response.status, errorText);
+        throw new Error(`Server error: ${response.status} - ${response.statusText}`);
       }
       
       setSubmitSuccess(true);
@@ -135,11 +140,11 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
-      console.error('Webhook URL:', webhookUrl);
-      console.error('Form data:', formData);
       
       if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        setSubmitError('Unable to connect to the server. This may be due to network issues or server configuration. Please try again later.');
+        setSubmitError('Network error: Unable to connect to the server. This may be due to CORS issues or network problems. Please try again later.');
+      } else if (error instanceof Error && error.message === 'Contact webhook URL not configured') {
+        setSubmitError('Configuration error: Contact form is not properly configured. Please contact support.');
       } else {
         setSubmitError(`Failed to submit form: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
       }
