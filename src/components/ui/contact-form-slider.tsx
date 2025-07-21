@@ -108,25 +108,46 @@ export function ContactFormSlider({ isOpen, onClose }: ContactFormSliderProps) {
       }
       
       console.log('Submitting to webhook:', webhookUrl);
-      console.log('Form data:', formData);
+      console.log('Form data:', validationResult.data);
       
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Origin': window.location.origin
+          'Origin': window.location.origin,
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           ...validationResult.data,
           submittedAt: new Date().toISOString(),
-          source: 'contact-form-slider'
+          source: 'contact-form-slider',
+          userAgent: navigator.userAgent,
+          timestamp: Date.now()
         })
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      
       if (!response.ok) {
-        const errorText = await response.text();
+        let errorText;
+        try {
+          errorText = await response.text();
+        } catch (e) {
+          errorText = 'Unable to read error response';
+        }
         console.error('Server response:', response.status, errorText);
-        throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+        
+        // Provide more specific error messages based on status code
+        if (response.status === 500) {
+          throw new Error(`Webhook server error (500). This is likely a configuration issue on the N8N webhook. Please check the webhook logs and ensure it can process the data format being sent.`);
+        } else if (response.status === 403) {
+          throw new Error(`Access forbidden (403). The webhook may not be configured to accept requests from this domain.`);
+        } else if (response.status === 404) {
+          throw new Error(`Webhook not found (404). Please verify the webhook URL is correct.`);
+        } else {
+          throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+        }
       }
       
       setSubmitSuccess(true);
