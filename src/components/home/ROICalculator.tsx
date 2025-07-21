@@ -326,25 +326,25 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ isDarkMode }) => {
               </div>
 
               {/* Revenue Recovery */}
-              <div className="bg-green-400 rounded-xl p-4 text-white text-center">
+              <div className="bg-green-400 rounded-xl p-8 text-white text-center flex flex-col justify-center min-h-[280px]">
                 <h3 className="text-sm font-bold uppercase tracking-wide mb-3 text-green-50">
                   Your Revenue Recovery
                 </h3>
-                <div className="text-2xl md:text-3xl font-bold mb-4">
+                <div className="text-3xl md:text-4xl font-bold mb-6">
                   {formatCurrency(Math.max(0, netMonthlyRecovery))}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <div className="text-base font-bold">
+                    <div className="text-lg font-bold">
                       {formatCurrency(Math.max(0, netDailyRecovery))}
                     </div>
-                    <div className="text-xs text-green-50">saved daily</div>
+                    <div className="text-sm text-green-50">saved daily</div>
                   </div>
                   <div>
-                    <div className="text-base font-bold">
+                    <div className="text-lg font-bold">
                       {formatCurrency(Math.max(0, netYearlyRecovery))}
                     </div>
-                    <div className="text-xs text-green-50">saved yearly</div>
+                    <div className="text-sm text-green-50">saved yearly</div>
                   </div>
                 </div>
               </div>
